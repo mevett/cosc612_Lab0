@@ -26,21 +26,22 @@ CXXFLAGS= -O3 -Wextra -std=c++11
 CUDAFLAGS= --relocatable-device-code=false -gencode arch=compute_60,code=compute_60 -gencode arch=compute_60,code=sm_60  
 #If you wanted to link any external libraries, they should be listed here, e.g:
 #LIBS= -lopenblas -lpthread -lcudart -lcublas
-LIBS=
+#This lib is for the wb package from NVidia_gputeachingkit_labs.  
+LIBS= -lwb
 #This indicates additional directories where libraries may be found
 LIBDIRS=-L/usr/local/cuda/lib64
 #This indicates additional directories where include files (".h files") may be found.
-INCDIRS=-I/usr/local/cuda/include
+INCDIRS=-I/usr/local/cuda/include -I/usr/local/include/wb
 #This is the command that will be used to remove file as part of a clean operation
 RM= rm -rf
 
 #Name of the executable
 #You must modify this!!  TODO:
-EXECUTABLE=testCUDA
+EXECUTABLE=lab0
 
 #You must modify this!!  TODO:
 #OBJS should be all the object files that will be linked to form the executable
-OBJS=main.o secondFile.o
+OBJS=main.o
 
 
 #The following could be used in place of the default rule, replacing matrix_cuda with 
@@ -58,7 +59,7 @@ OBJS=main.o secondFile.o
 %.o: %.cu
 	@echo 'Building file: $<'
 	@echo 'Invoking: NVCC Compiler'
-	$(NVCC) -G -g -O0 --compile $(CUDAFLAGS) -x cu -o  "$@" "$<"
+	$(NVCC) -G -g -O0 --compile $(CUDAFLAGS) $(INCDIRS) -x cu -o  "$@" "$<"
 	@echo 'Finished building: $<'
 	@echo ' '
 
